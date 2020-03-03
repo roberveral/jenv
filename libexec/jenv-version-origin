@@ -3,8 +3,17 @@
 set -e
 [ -n "$JENV_DEBUG" ] && set -x
 
+beginswith() { case $2 in "$1"*) true;; *) false;; esac; }
+
+JENV_MAVEN_VERSION="$(jenv-version-maven-read || true)"
+JENV_VERSION_FILE="$(jenv-version-file)"
+
 if [ -n "$JENV_VERSION" ]; then
   echo "JENV_VERSION environment variable"
+elif beginswith "$PWD" "$JENV_VERSION_FILE"; then
+  echo "$JENV_VERSION_FILE"
+elif [ -n "$JENV_MAVEN_VERSION" ]; then
+  echo "Maven project pom.xml"
 else
-  jenv-version-file
+  echo "$JENV_VERSION_FILE"
 fi

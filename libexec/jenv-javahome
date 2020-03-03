@@ -22,9 +22,10 @@ fi
 export JENV_VERSION="$(jenv-version-name)"
 
 
-export JENV_OPTIONS="$(jenv-options)"    
+# export JENV_OPTIONS="$(jenv-options)"    
 
-
-export JAVA_HOME="$JENV_ROOT/versions/$JENV_VERSION"    
+if [ "$JENV_VERSION" != "system" ]; then
+  export JAVA_HOME="$JENV_ROOT/versions/$JENV_VERSION"    
+fi
 
 echo $JAVA_HOME

@@ -3,8 +3,16 @@
 set -e
 [ -n "$JENV_DEBUG" ] && set -x
 
-if [ -z "$JENV_VERSION" ]; then
-  JENV_VERSION_FILE="$(jenv-version-file)"
+beginswith() { case $2 in "$1"*) true;; *) false;; esac; }
+
+JENV_MAVEN_VERSION="$(jenv-version-maven-read || true)"
+JENV_VERSION_FILE="$(jenv-version-file)"
+
+if [ -z "$JENV_VERSION" ] && beginswith "$PWD" "$JENV_VERSION_FILE"; then
+  JENV_VERSION="$(jenv-version-file-read "$JENV_VERSION_FILE" || true)"
+elif [ -z "$JENV_VERSION" ] && [ -n "$JENV_MAVEN_VERSION" ]; then
+  JENV_VERSION="$JENV_MAVEN_VERSION"
+elif [ -z "$JENV_VERSION" ]; then
   JENV_VERSION="$(jenv-version-file-read "$JENV_VERSION_FILE" || true)"
 fi
 
